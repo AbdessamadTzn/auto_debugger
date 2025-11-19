@@ -299,7 +299,7 @@ def main():
         
         print(f"🐍 Python trouvé: {python_exec}")
     
-    print(f"\n🐍 Auto Debugger CLI")
+    print("\n🐍 Auto Debugger CLI")
     print(f"📄 Script: {script_path}")
     if args.venv:
         print(f"📦 Venv: {args.venv}")
