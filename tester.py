@@ -1,7 +1,8 @@
 print("Hello, World!")
 print("Hello, World!")
-consnt = "Hello, World!"
+text = "Hello, World!"
 print(consnt)
 print(consnt)
 kok = "Hello, World!"
-print(kok)
+
+je suis une erreur de la logique couscous
