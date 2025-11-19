@@ -1,13 +1,15 @@
-
+"""
+Configuration pour Auto-Debug
+"""
 import os
 from pathlib import Path
 
-# API Configuration
-GROK_API_KEY = os.getenv("GROK_API_KEY", "")
-GROK_API_URL = "https://api.x.ai/v1/chat/completions"
-GROK_MODEL = "grok-beta"
+# API Configuration - GROQ
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
+GROQ_MODEL = "llama-3.3-70b-versatile"  # ou "mixtral-8x7b-32768"
 
-# Système de prompt pour Grok
+# Système de prompt pour Groq
 SYSTEM_PROMPT = """Tu es un expert Python spécialisé dans le débogage de code.
 
 RÈGLES STRICTES :

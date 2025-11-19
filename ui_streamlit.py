@@ -5,7 +5,7 @@ import streamlit as st
 import sys
 from pathlib import Path
 from executor import ScriptExecutor
-from ai_agent import GrokAgent
+from ai_agent import GroqAgent
 from patcher import CodePatcher
 import config
 

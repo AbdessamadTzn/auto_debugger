@@ -1,6 +1,5 @@
-
-""
-Agent IA utilisant Grok API pour analyser et corriger les erreurs
+"""
+Agent IA utilisant Groq API pour analyser et corriger les erreurs
 """
 import json
 import requests
@@ -9,23 +8,24 @@ from pathlib import Path
 import config
 
 
-class GrokAgent:
-    """Agent qui communique avec Grok API pour corriger le code"""
-    def __init__(self, api_key: Optional[str] = None):
-    """
-    Args:
-        api_key: Clé API Groq (ou utilise la variable d'env)
-    """
-    self.api_key = api_key or config.GROQ_API_KEY
-    if not self.api_key:
-        raise ValueError("❌ Clé API Groq manquante ! Définissez GROQ_API_KEY")
+class GroqAgent:
+    """Agent qui communique avec Groq API pour corriger le code"""
     
-    self.api_url = config.GROQ_API_URL
-    self.model = config.GROQ_MODEL
+    def __init__(self, api_key: Optional[str] = None):
+        """
+        Args:
+            api_key: Clé API Groq (ou utilise la variable d'env)
+        """
+        self.api_key = api_key or config.GROQ_API_KEY
+        if not self.api_key:
+            raise ValueError("❌ Clé API Groq manquante ! Définissez GROQ_API_KEY")
+        
+        self.api_url = config.GROQ_API_URL
+        self.model = config.GROQ_MODEL
     
     def analyze_error(self, script_path: str, error_info: dict) -> Optional[dict]:
         """
-        Envoie le code et l'erreur à Grok pour analyse
+        Envoie le code et l'erreur à Groq pour analyse
         
         Args:
             script_path: Chemin du script bugué
@@ -45,9 +45,9 @@ class GrokAgent:
         # Construire le prompt
         user_prompt = self._build_prompt(source_code, error_info, script_path)
         
-        # Appeler Grok API
-        print("Envoi à Grok pour analyse...")
-        response = self._call_grok_api(user_prompt)
+        # Appeler Groq API
+        print("🤖 Envoi à Groq pour analyse...")
+        response = self._call_groq_api(user_prompt)
         
         if not response:
             return None
@@ -56,7 +56,7 @@ class GrokAgent:
         return self._parse_response(response)
     
     def _build_prompt(self, code: str, error_info: dict, script_path: str) -> str:
-        """Construit le prompt pour Grok"""
+        """Construit le prompt pour Groq"""
         filename = Path(script_path).name
         
         prompt = f"""
@@ -89,7 +89,7 @@ Analyse cette erreur et propose une correction en respectant le format JSON impo
             user_prompt: Prompt utilisateur
         
         Returns:
-            Réponse brute de Grok ou None
+            Réponse brute de Groq ou None
         """
         headers = {
             "Content-Type": "application/json",
@@ -102,7 +102,7 @@ Analyse cette erreur et propose une correction en respectant le format JSON impo
                 {"role": "system", "content": config.SYSTEM_PROMPT},
                 {"role": "user", "content": user_prompt}
             ],
-            "temperature": 0.3,  # Réponses plus déterministes
+            "temperature": 0.3,
             "max_tokens": 2000
         }
         
@@ -125,15 +125,17 @@ Analyse cette erreur et propose une correction en respectant le format JSON impo
                 return None
                 
         except requests.exceptions.RequestException as e:
-            print(f"Erreur API Grok : {e}")
+            print(f"❌ Erreur API Groq : {e}")
+            if hasattr(e.response, 'text'):
+                print(f"   Détails : {e.response.text}")
             return None
     
     def _parse_response(self, response: str) -> Optional[dict]:
         """
-        Parse et valide la réponse JSON de Grok
+        Parse et valide la réponse JSON de Groq
         
         Args:
-            response: Réponse brute de Grok
+            response: Réponse brute de Groq
         
         Returns:
             Dict validé ou None
